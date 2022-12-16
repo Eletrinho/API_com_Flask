@@ -21,13 +21,13 @@ class Filmes(Resource):
             filmes_dict.append(film.get())
         return jsonify(filmes_dict)
 
-    @ns.expect(filmes_model)
-    @ns.marshal_with(filmes_model, code=201)
+    @ns.expect(filmes_model, validate=True)
+    @ns.marshal_with(filmes_model)
     def post(self):
         new_movie = FilmesDB(name=api.payload.get("name"), year=api.payload.get("year"), profit=api.payload.get("profit"))
         db.session.add(new_movie)
         db.session.commit()
-        return jsonify({'message': 'Filme adicionado com sucesso'})
+        return new_movie.get(), 201
 
 @ns.route("/<int:id>")
 @ns.response(404, "Filme não encontrado")
@@ -47,10 +47,10 @@ class FilmesEdit(Resource):
         return jsonify({'filme_deletado': filme.get()})
 
     @ns.expect(filmes_model)
-    @ns.marshal_with(filmes_model, code=204)
+    @ns.marshal_with(filmes_model)
     def put(self, id):
         filme = FilmesDB.query.get(id) or abort(404, f"Filme de Id {id}, não encontrado.")
         filme.update(name=api.payload.get("name"), year=api.payload.get("year"), profit=api.payload.get("profit"))
         db.session.commit()
-        return jsonify(filme.get()), 204
+        return filme.get(), 201
         
