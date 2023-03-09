@@ -1,4 +1,3 @@
-import os, json
 from app import api, db, ns
 from flask import jsonify, abort
 from flask_restx import Resource, fields
