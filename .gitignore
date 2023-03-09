@@ -1,6 +1,3 @@
 /exemplo.py
 /venv
-__pycache__
-*__pycache__
-*.pyc
-app/controllers/__pycache__/
+**/__pycache__/
